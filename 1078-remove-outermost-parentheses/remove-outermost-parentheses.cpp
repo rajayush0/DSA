@@ -1,21 +1,28 @@
 class Solution {
 public:
     string removeOuterParentheses(string s) {
-        int n = s.size();
-        int count1 = 0, count2 = 0;
-        int ptr1 = 0;
         string ans = "";
+        int n = s.size();
+        int start = 0;  // start of primitive
+        int end = 0;    // moving pointer
+        int open = 0;
 
-        for (int i = 0; i < n; i++) {
-            if (s[i] == '(') count1++;
-            else count2++;
+        while (end < n) {
+            if (s[end] == '(') open++;
+            else open--;
 
-            if (count1 == count2) {
-                // primitive substring found: from ptr1 to i
-                ans += s.substr(ptr1 + 1, i - ptr1 - 1); // remove outermost ()
-                ptr1 = i + 1; // start new primitive
+            // When open == 0, we found a complete primitive
+            if (open == 0) {
+                // Add inner part (exclude outermost '(' and ')')
+                ans += s.substr(start + 1, end - start - 1);
+
+                // Move start to next primitive
+                start = end + 1;
             }
+
+            end++;
         }
+
         return ans;
     }
 };
